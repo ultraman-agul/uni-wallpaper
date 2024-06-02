@@ -3,6 +3,16 @@ import { http } from '@/utils/http'
 export const getUserIp = () => {
   return http.get<string>('/user/get-ip')
 }
+
+interface IUserInfo {
+  username: string
+  nickName: string
+  email: string
+  token?: string
+}
+export const apiGetUserInfo = () => {
+  return http.get<IUserInfo>('/user/getUserInfo')
+}
 export interface IBannerItem {
   appid: null | string
   createTime: string
@@ -14,7 +24,7 @@ export interface IBannerItem {
   url: string
 }
 
-/** GET 请求 */
+// 轮播图
 export const getBannerList = () => {
   return http.get<IBannerItem[]>('/banner')
 }
@@ -29,6 +39,7 @@ export interface IWallpaperItem {
   url: string
 }
 
+// 随机n张壁纸
 export const apiGetDayRandom = (count: number) => {
   return http.get<IWallpaperItem[]>('/wallpaper/randomWall', { count })
 }
@@ -41,12 +52,13 @@ export interface IClassifyItem {
   updateTime: string
 }
 
+// 获取分类列表
 export const apiGetClassify = () => {
   return http.get<IClassifyItem[]>('/classify')
 }
 
 export const apiUserInfo = () => {
-  return http.get<any>('https://tea.qingnian8.com/api/bizhi/userInfo')
+  return http.get<any>('/user')
 }
 
 enum Type {
@@ -58,12 +70,11 @@ interface IScoreDownloadParams {
   type: Type
   wallpaperId: string
 }
+// 评分和下载
 export const apiGetSetupScore = (params: IScoreDownloadParams) => {
   return http.post<any[]>('/score', params)
 }
-export const apiWriteDownload = () => {
-  return http.get<any[]>('https://tea.qingnian8.com/api/bizhi/downloadWall')
-}
+
 export const apiDetailWall = ({ id }) => {
   return http.get<any[]>('/wallpaper/find' + id)
 }

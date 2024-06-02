@@ -1,3 +1,10 @@
+<route lang="json5">
+{
+  style: {
+    navigationStyle: 'custom',
+  },
+}
+</route>
 <template>
   <view class="preview" v-if="currentInfo">
     <swiper circular :current="currentIndex" @change="swiperChange">
@@ -138,7 +145,7 @@
 import { ref } from 'vue'
 import { onLoad, onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
 import { getStatusBarHeight } from '@/utils/system'
-import { apiGetSetupScore, apiWriteDownload, apiDetailWall } from '@/service/index'
+import { apiGetSetupScore, apiDetailWall } from '@/service/index'
 const maskState = ref(true)
 const infoPopup = ref(null)
 const scorePopup = ref(null)
@@ -200,6 +207,9 @@ const clickScoreClose = () => {
 
 // 确认评分
 const submitScore = async () => {
+  if (isScore.value) {
+    return
+  }
   uni.showLoading({
     title: '加载中...',
   })
@@ -252,14 +262,14 @@ const clickDownload = async () => {
       title: '下载中...',
       mask: true,
     })
-    const { classid, _id: wallId } = currentInfo.value
-    const res = await apiWriteDownload({
-      classid,
-      wallId,
+    const { id: wallpaperId } = currentInfo.value
+    const res = await apiGetSetupScore({
+      wallpaperId,
+      type: 'download',
     })
-    if (res.errCode !== 0) throw res
+    if (res.message !== 'success') throw res
     uni.getImageInfo({
-      src: currentInfo.value.picurl,
+      src: currentInfo.value.url,
       success: (res) => {
         uni.saveImageToPhotosAlbum({
           filePath: res.path,
@@ -318,7 +328,7 @@ const clickDownload = async () => {
 // 分享给好友
 onShareAppMessage((e) => {
   return {
-    title: '咸虾米壁纸',
+    title: '搜罗壁纸',
     path: '/pages/preview/preview?id=' + currentId.value + '&type=share',
   }
 })
@@ -326,7 +336,7 @@ onShareAppMessage((e) => {
 // 分享朋友圈
 onShareTimeline(() => {
   return {
-    title: '咸虾米壁纸',
+    title: '搜罗壁纸',
     query: 'id=' + currentId.value + '&type=share',
   }
 })

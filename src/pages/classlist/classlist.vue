@@ -47,9 +47,9 @@ const queryParams = {
 let pageName
 
 onLoad((e) => {
-  const { id: classid = null, name = null, type = null } = e
+  const { id: classifyId, name = null, type = null } = e
   if (type) queryParams.type = type
-  if (classid) queryParams.classifyId = classid
+  if (classifyId) queryParams.classifyId = classifyId
 
   pageName = name
   // 修改导航标题

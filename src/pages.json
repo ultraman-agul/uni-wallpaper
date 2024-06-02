@@ -73,11 +73,18 @@
     },
     {
       "path": "pages/preview/preview",
-      "type": "page"
+      "type": "page",
+      "style": {
+        "navigationStyle": "custom"
+      }
     },
     {
       "path": "pages/user/user",
-      "type": "page"
+      "type": "page",
+      "style": {
+        "navigationStyle": "default",
+        "navigationBarTitleText": "我的"
+      }
     }
   ],
   "subPackages": []

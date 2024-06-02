@@ -1,3 +1,11 @@
+<route lang="json5">
+{
+  style: {
+    navigationStyle: 'default',
+    navigationBarTitleText: '我的',
+  },
+}
+</route>
 <template>
   <view class="userLayout pageBg" v-if="userinfo">
     <view :style="{ height: getNavBarHeight() + 'px' }"></view>

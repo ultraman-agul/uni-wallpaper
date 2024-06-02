@@ -15,14 +15,14 @@
       鸽友们好，我是
       <text class="text-red-500">菲鸽</text>
     </view>
-    <RequestComp />
-    <UploadComp />
+    <!-- <RequestComp /> -->
+    <!-- <UploadComp /> -->
   </view>
 </template>
 
 <script lang="ts" setup>
-import RequestComp from './components/request.vue'
-import UploadComp from './components/upload.vue'
+// import RequestComp from './components/request.vue'
+// import UploadComp from './components/upload.vue'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
