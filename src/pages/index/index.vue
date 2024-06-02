@@ -9,6 +9,9 @@
 </route>
 <template>
   <view class="homeLayout pageBg">
+    <!-- #ifndef MP-TOUTIAO -->
+    <custom-nav-bar title="推荐"></custom-nav-bar>
+    <!-- #endif -->
     <view class="banner">
       <swiper
         circular
@@ -40,19 +43,17 @@
         <template #name>每日推荐</template>
         <template #custom>
           <view class="date">
-            <!-- <uni-icons type="calendar" size="18"></uni-icons>
+            <uni-icons type="calendar" size="18"></uni-icons>
             <view class="text">
               <uni-dateformat :date="Date.now()" format="dd日"></uni-dateformat>
-            </view> -->
+            </view>
           </view>
         </template>
       </common-title>
       <view class="content">
         <scroll-view scroll-x>
-          <!-- <view class="box" v-for="item in randomList" :key="item.id" @click="goPreview(item.id)"> -->
-          <view class="box" v-for="item in randomList" :key="item._id" @click="goPreview(item._id)">
-            <!-- <image :src="item.url" mode="aspectFill"></image> -->
-            <image :src="item.smallPicurl" mode="aspectFill"></image>
+          <view class="box" v-for="item in randomList" :key="item.id" @click="goPreview(item.id)">
+            <image :src="item.url" mode="aspectFill"></image>
           </view>
         </scroll-view>
       </view>

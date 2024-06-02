@@ -1,0 +1,20 @@
+/* stylelint-disable selector-type-no-unknown */
+view,
+swiper,
+swiper-item {
+  box-sizing: border-box;
+}
+
+.pageBg {
+  min-height: 80vh;
+  background: linear-gradient(to bottom, transparent, #fff 400rpx),
+    linear-gradient(to right, #beecd8 20%, #f4e2d8);
+}
+
+.loadingLayout {
+  padding: 30rpx 0;
+}
+
+.safe-area-inset-bottom {
+  height: env(safe-area-inset-bottom);
+}

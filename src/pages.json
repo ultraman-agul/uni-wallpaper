@@ -54,6 +54,13 @@
       }
     },
     {
+      "path": "pages/classify/classify",
+      "type": "home",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
       "path": "pages/about/about",
       "type": "page",
       "style": {
@@ -61,7 +68,7 @@
       }
     },
     {
-      "path": "pages/classify/classify",
+      "path": "pages/classlist/classlist",
       "type": "page"
     },
     {

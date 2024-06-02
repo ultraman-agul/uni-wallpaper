@@ -1,3 +1,4 @@
+/* eslint-disable no-unreachable */
 const SYSTEM_INFO = uni.getSystemInfoSync()
 
 export const getStatusBarHeight = () => SYSTEM_INFO.statusBarHeight || 15
@@ -13,15 +14,15 @@ export const getTitleBarHeight = () => {
 
 export const getNavBarHeight = () => getStatusBarHeight() + getTitleBarHeight()
 
-// export const getLeftIconLeft = () => {
-//   // #ifdef MP-TOUTIAO
-//   let {
-//     leftIcon: { left, width },
-//   } = tt.getCustomButtonBoundingClientRect()
-//   return left + parseInt(width)
-//   // #endif
+export const getLeftIconLeft = () => {
+  // #ifdef MP-TOUTIAO
+  // const {
+  //   leftIcon: { left, width },
+  // } = tt.getCustomButtonBoundingClientRect()
+  // return left + parseInt(width)
+  // #endif
 
-//   // #ifndef MP-TOUTIAO
-//   return 0
-//   // #endif
-// }
+  // // #ifndef MP-TOUTIAO
+  return 0
+  // // #endif
+}

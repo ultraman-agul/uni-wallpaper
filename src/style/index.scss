@@ -1,5 +1,6 @@
 // @import './iconfont.css';
-
+/* stylelint-disable-next-line scss/at-import-partial-extension */
+@import './common.scss';
 .test {
   // 可以通过 @apply 多个样式封装整体样式
   @apply mt-4 ml-4;

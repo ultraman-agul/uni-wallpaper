@@ -1,11 +1,11 @@
 <template>
   <view class="preview" v-if="currentInfo">
     <swiper circular :current="currentIndex" @change="swiperChange">
-      <swiper-item v-for="(item, index) in classList" :key="item._id">
+      <swiper-item v-for="(item, index) in classList" :key="item.id">
         <image
           v-if="readImgs.includes(index)"
           @click="maskChange"
-          :src="item.picurl"
+          :src="item.url"
           mode="aspectFill"
         ></image>
       </swiper-item>
@@ -33,7 +33,7 @@
 
         <view class="box" @click="clickScore">
           <uni-icons type="star" size="28"></uni-icons>
-          <view class="text">{{ currentInfo.score }}分</view>
+          <view class="text">{{ currentInfo.averageScore }}分</view>
         </view>
 
         <view class="box" @click="clickDownload">
@@ -56,7 +56,7 @@
           <view class="content">
             <view class="row">
               <view class="label">壁纸ID：</view>
-              <text selectable class="value">{{ currentInfo._id }}</text>
+              <text selectable class="value">{{ currentInfo.id }}</text>
             </view>
             <!--
 						<view class="row">
@@ -64,16 +64,16 @@
 							<text class="value class">明星美女</text>
 						</view>
 						 -->
-            <view class="row">
+            <!-- <view class="row">
               <view class="label">发布者：</view>
               <text class="value">{{ currentInfo.nickname }}</text>
-            </view>
+            </view> -->
 
             <view class="row">
               <text class="label">评分：</text>
               <view class="value roteBox">
-                <uni-rate readonly touchable :value="currentInfo.score" size="16" />
-                <text class="score">{{ currentInfo.score }}分</text>
+                <uni-rate readonly touchable :value="currentInfo.averageScore" size="16" />
+                <text class="score">{{ currentInfo.averageScore }}分</text>
               </view>
             </view>
 
@@ -84,17 +84,17 @@
               </view>
             </view>
 
-            <view class="row">
+            <!-- <view class="row">
               <text class="label">标签：</text>
               <view class="value tabs">
                 <view class="tab" v-for="tab in currentInfo.tabs" :key="tab">
                   {{ tab }}
                 </view>
               </view>
-            </view>
+            </view> -->
 
             <view class="copyright">
-              声明：本图片来用户投稿，非商业使用，用于免费学习交流，如侵犯了您的权益，您可以拷贝壁纸ID举报至平台，邮箱513894357@qq.com，管理将删除侵权壁纸，维护您的权益。
+              声明：本图片来自用户投稿，非商业使用，用于免费学习交流，如侵犯了您的权益，您可以拷贝壁纸ID举报至平台，邮箱2514618741@qq.com，管理将删除侵权壁纸，维护您的权益。
             </view>
 
             <view class="safe-area-inset-bottom"></view>
@@ -113,9 +113,9 @@
           </view>
         </view>
 
-        <view class="content">
+        <view class="scoreContent">
           <uni-rate v-model="userScore" allowHalf :disabled="isScore" disabled-color="#FFCA3E" />
-          <text class="text">{{ userScore }}分</text>
+          <text class="scoreText">{{ userScore }}分</text>
         </view>
 
         <view class="footer">
@@ -151,25 +151,15 @@ const isScore = ref(false)
 const readImgs = ref([])
 
 const storgClassList = uni.getStorageSync('storgClassList') || []
-classList.value = storgClassList.map((item) => {
-  return {
-    ...item,
-    picurl: item.smallPicurl.replace('_small.webp', '.jpg'),
-  }
-})
+classList.value = storgClassList
 
 onLoad(async (e) => {
-  currentId.value = e.id
-  if (e.type == 'share') {
+  currentId.value = +e.id
+  if (e.type === 'share') {
     const res = await apiDetailWall({ id: currentId.value })
-    classList.value = res.data.map((item) => {
-      return {
-        ...item,
-        picurl: item.smallPicurl.replace('_small.webp', '.jpg'),
-      }
-    })
+    classList.value = res.data
   }
-  currentIndex.value = classList.value.findIndex((item) => item._id == currentId.value)
+  currentIndex.value = classList.value.findIndex((item) => item.id === currentId.value)
   currentInfo.value = classList.value[currentIndex.value]
   readImgsFun()
 })
@@ -213,14 +203,13 @@ const submitScore = async () => {
   uni.showLoading({
     title: '加载中...',
   })
-  const { classid, _id: wallId } = currentInfo.value
+  const { id: wallpaperId } = currentInfo.value
   const res = await apiGetSetupScore({
-    classid,
-    wallId,
-    userScore: userScore.value,
+    wallpaperId,
+    score: userScore.value,
   })
   uni.hideLoading()
-  if (res.errCode === 0) {
+  if (res.message === 'success') {
     uni.showToast({
       title: '评分成功',
       icon: 'none',
@@ -240,7 +229,7 @@ const maskChange = () => {
 const goBack = () => {
   uni.navigateBack({
     success: () => {},
-    fail: (err) => {
+    fail: () => {
       uni.reLaunch({
         url: '/pages/index/index',
       })
@@ -268,7 +257,7 @@ const clickDownload = async () => {
       classid,
       wallId,
     })
-    if (res.errCode != 0) throw res
+    if (res.errCode !== 0) throw res
     uni.getImageInfo({
       src: currentInfo.value.picurl,
       success: (res) => {
@@ -281,7 +270,7 @@ const clickDownload = async () => {
             })
           },
           fail: (err) => {
-            if (err.errMsg == 'saveImageToPhotosAlbum:fail cancel') {
+            if (err.errMsg === 'saveImageToPhotosAlbum:fail cancel') {
               uni.showToast({
                 title: '保存失败，请重新点击下载',
                 icon: 'none',
@@ -537,13 +526,13 @@ function readImgsFun() {
     background: #fff;
     border-radius: 30rpx;
 
-    .content {
+    .scoreContent {
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 30rpx 0;
 
-      .text {
+      .scoretext {
         width: 80rpx;
         padding-left: 10rpx;
         font-size: 28rpx;

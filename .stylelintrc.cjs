@@ -43,7 +43,7 @@ module.exports = {
     'selector-type-no-unknown': [
       true,
       {
-        ignoreTypes: ['page'],
+        ignoreTypes: ['page', 'swiper', 'swiper-item', 'scroll-view'],
       },
     ],
     'comment-empty-line-before': 'never', // never|always|always-multi-line|never-multi-line

@@ -1,3 +1,10 @@
+<route lang="json5" type="home">
+{
+  style: {
+    navigationStyle: 'custom',
+  },
+}
+</route>
 <template>
   <view class="classLayout pageBg">
     <!-- #ifndef MP-TOUTIAO -->

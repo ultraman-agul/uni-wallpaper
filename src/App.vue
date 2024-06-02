@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import { onLaunch, onShow, onHide } from '@dcloudio/uni-app'
+import { useUserStore } from './store'
 
 onLaunch(() => {
   console.log('App Launch')
+  const userStore = useUserStore()
+  if (!userStore.userInfo.token) {
+    userStore.getUserInfo()
+  }
 })
 onShow(() => {
   console.log('App Show')

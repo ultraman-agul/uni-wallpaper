@@ -1,4 +1,8 @@
 import { http } from '@/utils/http'
+
+export const getUserIp = () => {
+  return http.get<string>('/user/get-ip')
+}
 export interface IBannerItem {
   appid: null | string
   createTime: string
@@ -12,8 +16,7 @@ export interface IBannerItem {
 
 /** GET 请求 */
 export const getBannerList = () => {
-  // return http.get<IBannerItem[]>('/banner')
-  return http.get<IBannerItem[]>('https://tea.qingnian8.com/api/bizhi/homeBanner')
+  return http.get<IBannerItem[]>('/banner')
 }
 
 export interface IWallpaperItem {
@@ -27,8 +30,7 @@ export interface IWallpaperItem {
 }
 
 export const apiGetDayRandom = (count: number) => {
-  // return http.get<IWallpaperItem[]>('/wallpaper/randomWall', { count })
-  return http.get<IWallpaperItem[]>('https://tea.qingnian8.com/api/bizhi/randomWall', { count })
+  return http.get<IWallpaperItem[]>('/wallpaper/randomWall', { count })
 }
 
 export interface IClassifyItem {
@@ -40,19 +42,36 @@ export interface IClassifyItem {
 }
 
 export const apiGetClassify = () => {
-  return http.get<IClassifyItem[]>('https://tea.qingnian8.com/api/bizhi/classify')
+  return http.get<IClassifyItem[]>('/classify')
 }
 
 export const apiUserInfo = () => {
   return http.get<any>('https://tea.qingnian8.com/api/bizhi/userInfo')
 }
 
-export const apiGetSetupScore = () => {
-  return http.get<any[]>('https://tea.qingnian8.com/api/bizhi/setupScore')
+enum Type {
+  Download = 'download',
+  Score = 'score',
+}
+interface IScoreDownloadParams {
+  score: number | null
+  type: Type
+  wallpaperId: string
+}
+export const apiGetSetupScore = (params: IScoreDownloadParams) => {
+  return http.post<any[]>('/score', params)
 }
 export const apiWriteDownload = () => {
   return http.get<any[]>('https://tea.qingnian8.com/api/bizhi/downloadWall')
 }
-export const apiDetailWall = () => {
-  return http.get<any[]>('https://tea.qingnian8.com/api/bizhi/detailWall')
+export const apiDetailWall = ({ id }) => {
+  return http.get<any[]>('/wallpaper/find' + id)
+}
+
+export const apiGetClassList = (params) => {
+  return http.get<any[]>('/wallpaper/classify', params)
+}
+
+export const apiGetHistoryList = (params) => {
+  return http.get<any[]>('https://tea.qingnian8.com/api/bizhi/userWallList', params)
 }

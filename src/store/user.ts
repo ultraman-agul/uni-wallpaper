@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { getUserIp } from '@/service/index'
 
 const initState = { nickname: '', avatar: '' }
 
@@ -7,6 +8,11 @@ export const useUserStore = defineStore(
   'user',
   () => {
     const userInfo = ref<IUserInfo>({ ...initState })
+
+    const getUserInfo = async () => {
+      const res = await getUserIp()
+      userInfo.value.token = res.data
+    }
 
     const setUserInfo = (val: IUserInfo) => {
       userInfo.value = val
@@ -23,6 +29,7 @@ export const useUserStore = defineStore(
 
     return {
       userInfo,
+      getUserInfo,
       setUserInfo,
       clearUserInfo,
       isLogined,
