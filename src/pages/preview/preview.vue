@@ -47,6 +47,11 @@
           <uni-icons type="download" size="23"></uni-icons>
           <view class="text">下载</view>
         </view>
+
+        <view class="box" @click="clickEdit">
+          <uni-icons type="edit" size="23"></uni-icons>
+          <view class="text">创作</view>
+        </view>
       </view>
     </view>
 
@@ -323,6 +328,13 @@ const clickDownload = async () => {
     uni.hideLoading()
   }
   // #endif
+}
+
+// 点击编辑
+const clickEdit = async () => {
+  uni.navigateTo({
+    url: '/pages/imageEdit/imageEdit?url=' + encodeURIComponent(currentInfo.value.url),
+  })
 }
 
 // 分享给好友

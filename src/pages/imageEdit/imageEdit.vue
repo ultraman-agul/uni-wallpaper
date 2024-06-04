@@ -21,13 +21,17 @@
 <script lang="ts" setup>
 const url = ref('https://n.sinaimg.cn/front/413/w1600h1213/20190115/cI63-hrsecha8755357.jpg')
 
+onLoad((e) => {
+  url.value = decodeURIComponent(e.url)
+  console.log(url.value)
+})
 const dataImg = ref('')
 function onMessage(e) {
-  const data = e.detail.data
+  const data = e.detail.data[0]
   console.log('收到来自web-view的消息: ', data)
   switch (data.action) {
     case 'save':
-      dataImg.value = item.data.replace(/^data:image\/\w+;base64,/, '') // API只接受纯Base64编码的数据部分
+      dataImg.value = data.data
       getSetting() // 根据base64保存图片
       break
     case 'cancel':
@@ -38,6 +42,7 @@ function onMessage(e) {
 
 // 判断是否授权，引导授权
 const getSetting = () => {
+  console.log('getSetting')
   uni.getSetting({
     success: (res) => {
       if (!res.authSetting['scope.writePhotosAlbum']) {
@@ -60,35 +65,37 @@ const getSetting = () => {
     },
   })
 }
-
-// 转换Base64为本地临时文件
-function base64ToTempFilePath(base64Data) {
-  return new Promise((resolve, reject) => {
-    uni.base64ToTempFile({
-      base64Data,
-      success: (res) => {
-        resolve(res.tempFilePath)
-      },
-      fail: (err) => {
-        reject(err)
-      },
-    })
-  })
-}
-
 // 保存图片
 async function saveBase64Image() {
   try {
-    const tempFilePath = await base64ToTempFilePath(dataImg.value)
-
-    // 保存到相册
-    uni.saveImageToPhotosAlbum({
-      filePath: tempFilePath,
-      success() {
-        console.log('图片已保存到相册')
+    const base64Data = dataImg.value // base64数据
+    const arr = base64Data.split(',')
+    const mime = arr[0].match(/:(.*?);/)[1]
+    const bstr = atob(arr[1])
+    let n = bstr.length
+    const u8arr = new Uint8Array(n)
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n)
+    }
+    const filePath = `${wx.env.USER_DATA_PATH}/temp.${mime.split('/')[1]}`
+    wx.getFileSystemManager().writeFile({
+      filePath,
+      data: u8arr,
+      encoding: 'binary',
+      success: function () {
+        console.log('写入成功')
+        uni.saveImageToPhotosAlbum({
+          filePath,
+          success: function () {
+            console.log('保存成功')
+          },
+          fail: function (err) {
+            console.log('保存失败', err)
+          },
+        })
       },
-      fail() {
-        console.log('保存图片到相册失败')
+      fail: function (err) {
+        console.log('写入失败', err)
       },
     })
   } catch (error) {
