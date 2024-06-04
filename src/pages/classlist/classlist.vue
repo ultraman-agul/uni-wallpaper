@@ -41,8 +41,8 @@ const noData = ref(false)
 
 // 定义data参数
 const queryParams = {
-  pageNum: 1,
-  pageSize: 12,
+  // pageNum: 1,
+  // pageSize: 12,
 }
 let pageName
 

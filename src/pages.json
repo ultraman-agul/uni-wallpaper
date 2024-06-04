@@ -73,7 +73,11 @@
     },
     {
       "path": "pages/imageEdit/imageEdit",
-      "type": "page"
+      "type": "page",
+      "layout": "default",
+      "style": {
+        "navigationBarTitleText": "创作"
+      }
     },
     {
       "path": "pages/preview/preview",
@@ -86,7 +90,7 @@
       "path": "pages/user/user",
       "type": "page",
       "style": {
-        "navigationStyle": "default",
+        "navigationStyle": "custom",
         "navigationBarTitleText": "我的"
       }
     }

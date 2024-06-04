@@ -1,11 +1,11 @@
-<!-- <route lang="json5" type="page">
+<route lang="json5" type="page">
 {
   layout: 'default',
   style: {
-    navigationBarTitleText: '图片编辑',
+    navigationBarTitleText: '创作',
   },
 }
-</route> -->
+</route>
 
 <template>
   <view class="">
@@ -40,6 +40,54 @@ function onMessage(e) {
   }
 }
 
+// 保存base64图片
+const saveBase64Image = () => {
+  console.log('saveBase64Image')
+  const timestamp = new Date().getTime()
+  const base64 = dataImg.value.replace(/^data:image\/\w+;base64,/, '') // 去掉data:image/png;base64,
+  const filePath = wx.env.USER_DATA_PATH + `/editImg_${timestamp}.png`
+  uni.showLoading({
+    title: '保存中',
+    mask: true,
+  })
+  uni.getFileSystemManager().writeFile({
+    filePath, // 创建一个临时文件名
+    data: base64, // 写入的文本或二进制数据
+    encoding: 'base64', // 写入当前文件的字符编码
+    success: (res) => {
+      console.log(res, '成功')
+
+      uni.saveImageToPhotosAlbum({
+        filePath,
+        success: function () {
+          uni.hideLoading()
+          uni.showToast({
+            title: '保存成功，请到相册查看',
+            icon: 'none',
+          })
+        },
+        fail: function (err) {
+          console.log(err, '失败')
+          uni.hideLoading()
+          console.log(err.errMsg)
+          uni.showToast({
+            title: '保存失败',
+            icon: 'none',
+          })
+        },
+      })
+    },
+    fail: (err) => {
+      uni.hideLoading()
+      console.log(err)
+      uni.showToast({
+        title: '创建文件失败',
+        icon: 'none',
+      })
+    },
+  })
+}
+
 // 判断是否授权，引导授权
 const getSetting = () => {
   console.log('getSetting')
@@ -64,43 +112,6 @@ const getSetting = () => {
       }
     },
   })
-}
-// 保存图片
-async function saveBase64Image() {
-  try {
-    const base64Data = dataImg.value // base64数据
-    const arr = base64Data.split(',')
-    const mime = arr[0].match(/:(.*?);/)[1]
-    const bstr = atob(arr[1])
-    let n = bstr.length
-    const u8arr = new Uint8Array(n)
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n)
-    }
-    const filePath = `${wx.env.USER_DATA_PATH}/temp.${mime.split('/')[1]}`
-    wx.getFileSystemManager().writeFile({
-      filePath,
-      data: u8arr,
-      encoding: 'binary',
-      success: function () {
-        console.log('写入成功')
-        uni.saveImageToPhotosAlbum({
-          filePath,
-          success: function () {
-            console.log('保存成功')
-          },
-          fail: function (err) {
-            console.log('保存失败', err)
-          },
-        })
-      },
-      fail: function (err) {
-        console.log('写入失败', err)
-      },
-    })
-  } catch (error) {
-    console.error('处理Base64数据出错:', error)
-  }
 }
 </script>
 

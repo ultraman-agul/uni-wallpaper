@@ -58,7 +58,7 @@ export const apiGetClassify = () => {
 }
 
 export const apiUserInfo = () => {
-  return http.get<any>('/user')
+  return http.get<any>('/user/getUserInfo')
 }
 
 enum Type {
@@ -84,5 +84,5 @@ export const apiGetClassList = (params) => {
 }
 
 export const apiGetHistoryList = (params) => {
-  return http.get<any[]>('https://tea.qingnian8.com/api/bizhi/userWallList', params)
+  return http.get<any[]>('/score/getUserRecordByType', params)
 }

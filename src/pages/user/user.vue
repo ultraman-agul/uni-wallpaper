@@ -1,22 +1,20 @@
 <route lang="json5">
 {
   style: {
-    navigationStyle: 'default',
+    navigationStyle: 'custom',
     navigationBarTitleText: '我的',
   },
 }
 </route>
 <template>
   <view class="userLayout pageBg" v-if="userinfo">
+    <!-- #ifndef MP-TOUTIAO -->
+    <custom-nav-bar title="我的"></custom-nav-bar>
+    <!-- #endif -->
     <view :style="{ height: getNavBarHeight() + 'px' }"></view>
     <view class="userInfo">
       <view class="avatar">
-        <!-- <image src="../../static/images/xxmLogo.png" mode="aspectFill"></image> -->
-      </view>
-      <view class="ip">{{ userinfo.IP }}</view>
-      <view class="address">
-        来自于：
-        {{ userinfo.address.city || userinfo.address.province || userinfo.address.country }}
+        <image :src="userinfo.pic ?? '../../static/logo.svg'" mode="aspectFill"></image>
       </view>
     </view>
 
@@ -28,7 +26,9 @@
             <view class="text">我的下载</view>
           </view>
           <view class="right">
-            <view class="text">{{ userinfo.downloadSize }}</view>
+            <view class="text">
+              {{ userinfo.downloadCount }}
+            </view>
             <wd-icon name="arrow-right" size="22px"></wd-icon>
           </view>
         </navigator>
@@ -39,7 +39,9 @@
             <view class="text">我的评分</view>
           </view>
           <view class="right">
-            <view class="text">{{ userinfo.scoreSize }}</view>
+            <view class="text">
+              {{ userinfo.scoreCount }}
+            </view>
             <wd-icon name="arrow-right" size="22px"></wd-icon>
           </view>
         </navigator>
