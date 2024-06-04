@@ -44,7 +44,7 @@ defineProps({
     z-index: 10;
     width: 100%;
     background: linear-gradient(to bottom, transparent, #fff 400rpx),
-      linear-gradient(to right, #beecd8 20%, #f4e2d8);
+      linear-gradient(to right, #d4fc79 20%, #96e6a1);
     .titleBar {
       display: flex;
       align-items: center;

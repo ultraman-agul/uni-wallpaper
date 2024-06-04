@@ -72,6 +72,10 @@
       "type": "page"
     },
     {
+      "path": "pages/imageEdit/imageEdit",
+      "type": "page"
+    },
+    {
       "path": "pages/preview/preview",
       "type": "page",
       "style": {

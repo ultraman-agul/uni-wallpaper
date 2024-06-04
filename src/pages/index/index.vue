@@ -73,6 +73,11 @@
         <theme-item v-for="item in classifyList" :key="item.id" :item="item"></theme-item>
         <theme-item :isMore="true"></theme-item>
       </view>
+      <image
+        @click="handleOpenImg"
+        src="http://img5.adesk.com/66506d35e7bce714fb0d51f2?imageMogr2/thumbnail/!640x480r/gravity/Center/crop/640x480&sign=f022d1c67c23df25461037a09f14e80d&t=665d4b6e"
+        mode="scaleToFill"
+      />
     </view>
   </view>
 </template>
@@ -120,6 +125,18 @@ const goPreview = (id) => {
   uni.setStorageSync('storgClassList', randomList.value)
   uni.navigateTo({
     url: '/pages/preview/preview?id=' + id,
+  })
+}
+
+const imgEdRef = ref(null)
+const handleOpenImg = () => {
+  console.log(imgEdRef)
+  uni.setStorageSync(
+    'url',
+    'http://img5.adesk.com/66506d35e7bce714fb0d51f2?imageMogr2/thumbnail/!640x480r/gravity/Center/crop/640x480&sign=f022d1c67c23df25461037a09f14e80d&t=665d4b6e',
+  )
+  uni.navigateTo({
+    url: '/pages/imageEdit/imageEdit',
   })
 }
 </script>

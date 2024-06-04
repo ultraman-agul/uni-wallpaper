@@ -8,6 +8,7 @@ interface NavigateToOptions {
        "/pages/classify/classify" |
        "/pages/about/about" |
        "/pages/classlist/classlist" |
+       "/pages/imageEdit/imageEdit" |
        "/pages/preview/preview" |
        "/pages/user/user";
 }
