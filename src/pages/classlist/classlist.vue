@@ -70,10 +70,13 @@ onReachBottom(() => {
 const getClassList = async () => {
   let res
   if (queryParams.classifyId) res = await apiGetClassList(queryParams)
-  if (queryParams.type) res = await apiGetHistoryList(queryParams)
+  if (queryParams.type) {
+    res = await apiGetHistoryList(queryParams)
+    res.data = res.data.map((item) => item.wallpaper)
+  }
 
   classList.value = [...classList.value, ...res.data]
-  if (queryParams.pageSize > res.data.length) noData.value = true
+  // if (queryParams.pageSize > res.data.length) noData.value = true
   uni.setStorageSync('storgClassList', classList.value)
   console.log(classList.value)
 }
@@ -81,7 +84,7 @@ const getClassList = async () => {
 // 分享给好友
 onShareAppMessage((e) => {
   return {
-    title: '咸虾米壁纸-' + pageName,
+    title: '苍穹壁纸-' + pageName,
     path: '/pages/classlist/classlist?id=' + queryParams.classifyId + '&name=' + pageName,
   }
 })
@@ -89,7 +92,7 @@ onShareAppMessage((e) => {
 // 分享朋友圈
 onShareTimeline(() => {
   return {
-    title: '咸虾米壁纸-' + pageName,
+    title: '苍穹壁纸-' + pageName,
     query: 'id=' + queryParams.classifyId + '&name=' + pageName,
   }
 })

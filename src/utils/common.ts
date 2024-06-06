@@ -31,3 +31,28 @@ export function gotoHome() {
     },
   })
 }
+
+// 检查用户是否允许保存图片，如果不允许则引导授权
+export function getSaveImgAuth(fn) {
+  uni.getSetting({
+    success: (res) => {
+      if (!res.authSetting['scope.writePhotosAlbum']) {
+        // 如果用户未授权，引导用户授权
+        uni.authorize({
+          scope: 'scope.writePhotosAlbum',
+          success() {
+            // 授权成功后执行保存图片的逻辑
+            fn()
+          },
+          fail() {
+            // 用户拒绝授权
+            console.log('用户拒绝授权')
+          },
+        })
+      } else {
+        // 已经授权，直接保存图片
+        fn()
+      }
+    },
+  })
+}

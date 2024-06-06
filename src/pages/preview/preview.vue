@@ -150,6 +150,7 @@
 import { ref } from 'vue'
 import { onLoad, onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
 import { getStatusBarHeight } from '@/utils/system'
+import { getSaveImgAuth } from '@/utils/common'
 import { apiGetSetupScore, apiDetailWall } from '@/service/index'
 const maskState = ref(true)
 const infoPopup = ref(null)
@@ -263,66 +264,90 @@ const clickDownload = async () => {
 
   // #ifndef H5
   try {
-    uni.showLoading({
-      title: '下载中...',
-      mask: true,
-    })
+    // uni.showLoading({
+    //   title: '下载中...',
+    //   mask: true,
+    // })
     const { id: wallpaperId } = currentInfo.value
     const res = await apiGetSetupScore({
       wallpaperId,
       type: 'download',
     })
     if (res.message !== 'success') throw res
-    uni.getImageInfo({
-      src: currentInfo.value.url,
-      success: (res) => {
-        uni.saveImageToPhotosAlbum({
-          filePath: res.path,
-          success: (res) => {
-            uni.showToast({
-              title: '保存成功，请到相册查看',
-              icon: 'none',
-            })
-          },
-          fail: (err) => {
-            if (err.errMsg === 'saveImageToPhotosAlbum:fail cancel') {
+    const saveFn = () => {
+      uni.getImageInfo({
+        src: currentInfo.value.url,
+        success: (res) => {
+          uni.saveImageToPhotosAlbum({
+            filePath: res.path,
+            success: (res) => {
               uni.showToast({
-                title: '保存失败，请重新点击下载',
+                title: '保存成功，请到相册查看',
                 icon: 'none',
               })
-              return
-            }
-            uni.showModal({
-              title: '授权提示',
-              content: '需要授权保存相册',
-              success: (res) => {
-                if (res.confirm) {
-                  uni.openSetting({
-                    success: (setting) => {
-                      console.log(setting)
-                      if (setting.authSetting['scope.writePhotosAlbum']) {
-                        uni.showToast({
-                          title: '获取授权成功',
-                          icon: 'none',
-                        })
-                      } else {
-                        uni.showToast({
-                          title: '获取权限失败',
-                          icon: 'none',
-                        })
-                      }
-                    },
-                  })
-                }
-              },
-            })
-          },
-          complete: () => {
-            uni.hideLoading()
-          },
-        })
-      },
-    })
+            },
+            fail: (err) => {
+              if (err.errMsg === 'saveImageToPhotosAlbum:fail cancel') {
+                uni.showToast({
+                  title: '保存失败，请重新点击下载',
+                  icon: 'none',
+                })
+              }
+              uni.getSetting({
+                success: (res) => {
+                  if (!res.authSetting['scope.writePhotosAlbum']) {
+                    // 如果用户未授权，引导用户授权
+                    uni.authorize({
+                      scope: 'scope.writePhotosAlbum',
+                      success() {
+                        // 授权成功后执行保存图片的逻辑
+                        saveFn()
+                      },
+                      fail() {
+                        // 用户拒绝授权
+                        console.log('用户拒绝授权')
+                      },
+                    })
+                  } else {
+                    // 已经授权，直接保存图片
+                    saveFn()
+                  }
+                },
+              })
+              // uni.showModal({
+              //   title: '授权提示',
+              //   content: '需要授权保存相册',
+              //   success: (res) => {
+              //     if (res.confirm) {
+              //       uni.openSetting({
+              //         success: (setting) => {
+              //           console.log(setting)
+              //           if (setting.authSetting['scope.writePhotosAlbum']) {
+              //             uni.showToast({
+              //               title: '获取授权成功',
+              //               icon: 'none',
+              //             })
+              //           } else {
+              //             uni.showToast({
+              //               title: '获取权限失败',
+              //               icon: 'none',
+              //             })
+              //           }
+              //         },
+              //       })
+              //     }
+              //   },
+              // })
+            },
+            complete: () => {
+              uni.hideLoading()
+            },
+          })
+        },
+      })
+    }
+    saveFn()
+    // getSaveImgAuth(saveFn)
   } catch (err) {
     console.log(err)
     uni.hideLoading()
