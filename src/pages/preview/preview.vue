@@ -49,7 +49,7 @@
         </view>
 
         <view class="box" @click="clickEdit">
-          <uni-icons type="edit" size="23"></uni-icons>
+          <uni-icons type="color" size="23"></uni-icons>
           <view class="text">创作</view>
         </view>
       </view>
@@ -264,10 +264,10 @@ const clickDownload = async () => {
 
   // #ifndef H5
   try {
-    // uni.showLoading({
-    //   title: '下载中...',
-    //   mask: true,
-    // })
+    uni.showLoading({
+      title: '下载中...',
+      mask: true,
+    })
     const { id: wallpaperId } = currentInfo.value
     const res = await apiGetSetupScore({
       wallpaperId,
@@ -293,51 +293,30 @@ const clickDownload = async () => {
                   icon: 'none',
                 })
               }
-              uni.getSetting({
+              uni.showModal({
+                title: '授权提示',
+                content: '需要授权保存相册',
                 success: (res) => {
-                  if (!res.authSetting['scope.writePhotosAlbum']) {
-                    // 如果用户未授权，引导用户授权
-                    uni.authorize({
-                      scope: 'scope.writePhotosAlbum',
-                      success() {
-                        // 授权成功后执行保存图片的逻辑
-                        saveFn()
-                      },
-                      fail() {
-                        // 用户拒绝授权
-                        console.log('用户拒绝授权')
+                  if (res.confirm) {
+                    uni.openSetting({
+                      success: (setting) => {
+                        console.log(setting)
+                        if (setting.authSetting['scope.writePhotosAlbum']) {
+                          uni.showToast({
+                            title: '获取授权成功',
+                            icon: 'none',
+                          })
+                        } else {
+                          uni.showToast({
+                            title: '获取权限失败',
+                            icon: 'none',
+                          })
+                        }
                       },
                     })
-                  } else {
-                    // 已经授权，直接保存图片
-                    saveFn()
                   }
                 },
               })
-              // uni.showModal({
-              //   title: '授权提示',
-              //   content: '需要授权保存相册',
-              //   success: (res) => {
-              //     if (res.confirm) {
-              //       uni.openSetting({
-              //         success: (setting) => {
-              //           console.log(setting)
-              //           if (setting.authSetting['scope.writePhotosAlbum']) {
-              //             uni.showToast({
-              //               title: '获取授权成功',
-              //               icon: 'none',
-              //             })
-              //           } else {
-              //             uni.showToast({
-              //               title: '获取权限失败',
-              //               icon: 'none',
-              //             })
-              //           }
-              //         },
-              //       })
-              //     }
-              //   },
-              // })
             },
             complete: () => {
               uni.hideLoading()
@@ -460,7 +439,7 @@ function readImgsFun() {
       width: 65vw;
       height: 120rpx;
       color: #000;
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.5);
       backdrop-filter: blur(20rpx);
       border-radius: 120rpx;
       box-shadow: 0 2rpx 0 rgba(0, 0, 0, 0.1);

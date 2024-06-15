@@ -1,17 +1,12 @@
 import { http } from '@/utils/http'
+import { ReqWallpaperParams, User } from '../interface'
 
 export const getUserIp = () => {
   return http.get<string>('/user/get-ip')
 }
 
-interface IUserInfo {
-  username: string
-  nickName: string
-  email: string
-  token?: string
-}
 export const apiGetUserInfo = () => {
-  return http.get<IUserInfo>('/user/getUserInfo')
+  return http.get<User.IUserInfo>('/user/getUserInfo')
 }
 export interface IBannerItem {
   appid: null | string
@@ -79,8 +74,8 @@ export const apiDetailWall = ({ id }) => {
   return http.get<any[]>('/wallpaper/find' + id)
 }
 
-export const apiGetClassList = (params) => {
-  return http.get<any[]>('/wallpaper/classify', params)
+export const apiGetClassList = (params: ReqWallpaperParams) => {
+  return http.get<any[]>('/wallpaper/search', params)
 }
 
 export const apiGetHistoryList = (params) => {

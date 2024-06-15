@@ -11,7 +11,7 @@
         v-for="item in classList"
         :key="item.id"
       >
-        <image :src="item.url" mode="aspectFill"></image>
+        <image :src="item.url" mode="aspectFill" class="image"></image>
       </navigator>
     </view>
 
@@ -41,8 +41,8 @@ const noData = ref(false)
 
 // 定义data参数
 const queryParams = {
-  // pageNum: 1,
-  // pageSize: 12,
+  pageNum: 1,
+  pageSize: 4,
 }
 let pageName
 
@@ -69,6 +69,7 @@ onReachBottom(() => {
 // 获取分类列表网络数据
 const getClassList = async () => {
   let res
+  console.log(queryParams, 'queryParams')
   if (queryParams.classifyId) res = await apiGetClassList(queryParams)
   if (queryParams.type) {
     res = await apiGetHistoryList(queryParams)
@@ -76,7 +77,7 @@ const getClassList = async () => {
   }
 
   classList.value = [...classList.value, ...res.data]
-  // if (queryParams.pageSize > res.data.length) noData.value = true
+  if (queryParams.pageNum >= res.data.totalPage) noData.value = true
   uni.setStorageSync('storgClassList', classList.value)
   console.log(classList.value)
 }
@@ -111,7 +112,7 @@ onUnload(() => {
     padding: 5rpx;
     .item {
       height: 440rpx;
-      image {
+      .image {
         display: block;
         width: 100%;
         height: 100%;
