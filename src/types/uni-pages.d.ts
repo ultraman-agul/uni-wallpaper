@@ -10,6 +10,7 @@ interface NavigateToOptions {
        "/pages/classlist/classlist" |
        "/pages/imageEdit/imageEdit" |
        "/pages/preview/preview" |
+       "/pages/search/search" |
        "/pages/user/user";
 }
 interface RedirectToOptions extends NavigateToOptions {}

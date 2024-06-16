@@ -42,7 +42,7 @@ const noData = ref(false)
 // 定义data参数
 const queryParams = {
   pageNum: 1,
-  pageSize: 4,
+  pageSize: 9,
 }
 let pageName
 
@@ -70,13 +70,15 @@ onReachBottom(() => {
 const getClassList = async () => {
   let res
   console.log(queryParams, 'queryParams')
-  if (queryParams.classifyId) res = await apiGetClassList(queryParams)
+  if (queryParams.classifyId) {
+    res = await apiGetClassList(queryParams)
+    classList.value = [...classList.value, ...res.data.list]
+  }
   if (queryParams.type) {
     res = await apiGetHistoryList(queryParams)
     res.data = res.data.map((item) => item.wallpaper)
+    classList.value = [...classList.value, ...res.data]
   }
-
-  classList.value = [...classList.value, ...res.data]
   if (queryParams.pageNum >= res.data.totalPage) noData.value = true
   uni.setStorageSync('storgClassList', classList.value)
   console.log(classList.value)

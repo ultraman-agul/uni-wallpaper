@@ -102,7 +102,7 @@ getBanner()
 // 随机壁纸
 const randomList = ref<IWallpaperItem[]>()
 const getDayRandom = async () => {
-  const res = await apiGetDayRandom(2)
+  const res = await apiGetDayRandom(3)
   randomList.value = res.data
 }
 getDayRandom()

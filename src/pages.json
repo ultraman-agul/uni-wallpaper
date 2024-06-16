@@ -87,6 +87,10 @@
       }
     },
     {
+      "path": "pages/search/search",
+      "type": "page"
+    },
+    {
       "path": "pages/user/user",
       "type": "page",
       "style": {

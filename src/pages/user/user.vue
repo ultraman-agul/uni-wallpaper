@@ -65,7 +65,7 @@
       </view>
     </view>
 
-    <view class="section">
+    <!-- <view class="section">
       <view class="list">
         <navigator url="/pages/notice/detail?id=653507c6466d417a3718e94b" class="row">
           <view class="left">
@@ -78,7 +78,7 @@
           </view>
         </navigator>
 
-        <navigator url="/pages/notice/detail?id=6536358ce0ec19c8d67fbe82" class="row">
+        <navigator url="" class="row" @click="getUserInfo1">
           <view class="left">
             <wd-icon name="error-fill" size="22px"></wd-icon>
             <view class="text">常见问题</view>
@@ -89,7 +89,7 @@
           </view>
         </navigator>
       </view>
-    </view>
+    </view> -->
   </view>
 
   <view class="loadingLayout" v-else>
@@ -100,7 +100,7 @@
 
 <script setup>
 import { getNavBarHeight } from '@/utils/system'
-import { apiUserInfo } from '@/service/index'
+import { apiUserInfo, login } from '@/service/index'
 import { ref } from 'vue'
 
 const userinfo = ref(null)
@@ -119,6 +119,58 @@ const getUserInfo = () => {
 }
 
 getUserInfo()
+
+uni.login({
+  provider: 'weixin',
+  success: function (loginRes) {
+    console.log('登录成功，code为：' + loginRes.code)
+    // 将code发送给后台服务器
+    login({ code: loginRes.code })
+      .then((res) => {
+        console.log(res)
+        // getUserInfo1()
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  },
+})
+
+function getUserInfo1(e) {
+  // 获取用户信息
+  uni.getUserProfile({
+    desc: '获取你的昵称、头像、地区及性别',
+    success: (res) => {
+      console.log('获取你的昵称、头像', res)
+    },
+    fail: (err) => {
+      console.log('拒绝了', err)
+    },
+  })
+}
+// getUserInfo1()
+
+// uni.getProvider({
+//   // 类型为oauth，用于获取第三方登录提供商
+//   service: 'oauth',
+//   success: (res) => {
+//     // 输出支持的第三方登录提供商列表
+//     console.log(res)
+//     if (~res.provider.indexOf('weixin')) {
+//       // 发起登录请求，获取临时登录凭证 code
+//       uni.login({
+//         // 登录提供商，如微信
+//         provider: 'weixin',
+//         success: (loginRes) => {
+//           // 获取用户登录凭证
+//           console.log(loginRes)
+
+//           // this.handleLogin(loginRes.code);
+//         },
+//       })
+//     }
+//   },
+// })
 </script>
 
 <style lang="scss" scoped>

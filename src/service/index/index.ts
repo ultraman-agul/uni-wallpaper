@@ -81,3 +81,7 @@ export const apiGetClassList = (params: ReqWallpaperParams) => {
 export const apiGetHistoryList = (params) => {
   return http.get<any[]>('/score/getUserRecordByType', params)
 }
+
+export const login = (params) => {
+  return http.get<any>('/user/login', params)
+}
